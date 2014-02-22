@@ -30,7 +30,7 @@ app.configure 'production', 'development', 'testing', ->
   app.use stylus.middleware                       # stylus
     src: "#{root_dir}/stylesheets"
     dest: "#{root_dir}/public"
-    compile: (str, path) -> 
+    compile: (str, path) ->
       stylus(str).set('filename', path)
   app.use coffee.middleware                       # coffee
     src: "#{root_dir}/web"
