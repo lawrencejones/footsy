@@ -1,0 +1,14 @@
+{
+  "name": "footsy",
+  "description": "HackKings project!",
+  "version": "0.0.1",
+  "private": true,
+  "dependencies": {
+    "express": "3.x",
+    "jade": "*",
+    "stylus": "*",
+    "nib": "*",
+    "mongodb": "*",
+    "connect-flash": "*"
+  }
+}

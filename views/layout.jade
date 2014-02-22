@@ -1,0 +1,17 @@
+doctype
+html
+  head
+    title #{title}
+    link(rel='stylesheet', href='/lib/bootstrap-3.1.1.min.css')
+    link(rel='stylesheet', href='/stylesheets/style.css')
+    script(src='lib/jquery-2.1.0.js')
+    script(src='lib/bootstrap-3.1.1.min.js')
+  body
+    //- Heading block "CGCU <3's U"
+    .jumbotron.text-center
+      h1 Footsy!
+      p.lead Play to win.
+    block append modal
+    block append content
+    block append scripts
+
