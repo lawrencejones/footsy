@@ -2,7 +2,10 @@
 mongoose = require 'mongoose'
 
 groupSchema = mongoose.Schema
-  name: String
-  size: Number
+  name:      String
+  size:      Number
+  football:  Boolean
+  latlng:
+    e: Number, d: Number
 
 module.exports = mongoose.model 'Groups', groupSchema
