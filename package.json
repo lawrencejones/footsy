@@ -9,6 +9,7 @@
     "stylus": "*",
     "nib": "*",
     "mongodb": "*",
-    "connect-flash": "*"
+    "connect-flash": "*",
+    "coffee-script": "*"
   }
 }
