@@ -33,7 +33,7 @@ app.configure 'production', 'development', 'testing', ->
   
 
 # Start database
-db = require('./db') config, []
+db = require('./db')
 
 # Load routes
 (require './routes')(app, db)
