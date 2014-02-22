@@ -1,10 +1,10 @@
 express  = require 'express'
-stylus   = require 'stylus'
 nib      = require 'nib'
 flash    = require 'connect-flash'
 fs       = require 'fs'
 path     = require 'path'
 coffee   = require './midware/cs'
+stylus   = require './midware/stylus'
 
 # Init app
 app = express()
@@ -27,13 +27,8 @@ app.configure 'production', 'development', 'testing', ->
   app.use flash()                                 # cflash
   
   # Asset serving
-  app.use stylus.middleware                       # stylus
-    src: "#{root_dir}/stylesheets"
-    dest: "#{root_dir}/public"
-    compile: (str, path) -> stylus(str)
-      .set('filename', path)
-  app.use coffee.middleware                       # coffee
-    src: "#{root_dir}/web"
+  app.use stylus.middleware root_dir              # stylus
+  app.use coffee.middleware root_dir              # coffee
   app.use express.static "#{root_dir}/public"     # static
   
 
