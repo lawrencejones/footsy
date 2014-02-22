@@ -8,6 +8,7 @@
     "jade": "*",
     "stylus": "*",
     "nib": "*",
+    "coffee-script": "*",
     "mongodb": "*",
     "connect-flash": "*"
   }
