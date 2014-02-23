@@ -24,8 +24,8 @@ module.exports = (server, Group) ->
     socket.on 'disconnect', ->
       console.log 'Socket disconnected!'
       Group.findByIdAndRemove socket.gid, (err, group) ->
-        broadcast 'delete', group
-        delete sockets[group._id]
+        broadcast 'delete', group if group?
+        delete sockets[group?._id]
 
 
   # Given a group id, group event and data, will pipe
@@ -39,6 +39,7 @@ module.exports = (server, Group) ->
     for own gid,sid of sockets
       Group.findById(gid)
         .exec (err, result) ->
+          return if not (group && result)
           d = calcDis group.latlng, result.latlng
           console.log d
           if d < 5

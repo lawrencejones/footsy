@@ -62,6 +62,6 @@ server = app.listen (PORT = process.env.PORT || 8888), ->
 sockets = (require './sockets')(server, db.models.Group)
 
 # Load routes
-(require './routes')(app, db)
+(require './routes')(app, db, sockets)
 
 

@@ -6,7 +6,7 @@ SRC_DIR  := app
 OUT_DIR  := target
 
 # Glob all the coffee source
-SRC := $(shell find app -name "*.coffee") server.coffee
+SRC := $(shell find app -name "*.coffee")
 LIB := $(SRC:$(SRC_DIR)/%.coffee=$(OUT_DIR)/%.js)
 
 .PHONY: all clean rebuild
