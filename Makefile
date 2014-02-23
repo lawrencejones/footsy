@@ -10,7 +10,7 @@ SRC := $(shell find app -name "*.coffee")
 LIB := $(SRC:$(SRC_DIR)/%.coffee=$(OUT_DIR)/%.js)
 
 # Glob web source
-WEB := $(shell find web -name "*.coffee")
+WEB := $(shell find web -name "*.coffee" | tail -r)
 
 .PHONY: all clean rebuild
 
@@ -21,7 +21,7 @@ all: $(LIB) public/app.js
 # Phony clean target
 clean:
 	@-echo "Cleaning *.js files"
-	@-rm -f $(LIB)
+	@-rm -f $(LIB) public/app.js
 
 # Phony rebuild target
 rebuild: clean all
