@@ -16,16 +16,17 @@ module.exports = (server, Group) ->
     socket.emit 'identify'
     socket.on 'checkin', (gid) ->
       console.log "Group #{gid} identified itself"
+      socket.gid = gid
       Group.findById(gid).exec (err, group) ->
         if group?
           console.log "Group #{gid} verified"
           sockets[gid] = socket.id
         socket.on 'disconnect', ->
           console.log 'Socket disconnected!'
-          console.log gid
-          Group.findByIdAndRemove gid, (err) ->
+          delete sockets[this.gid]
+          Group.findByIdAndRemove this.gid, (err, group) ->
+            console.log group
             broadcast 'delete', group
-            delete sockets[gid]
 
 
   # Given a group id, group event and data, will pipe
@@ -36,13 +37,12 @@ module.exports = (server, Group) ->
 
   # Broadcasts event with data to all sockets
   broadcast = (event, data) ->
+    console.log sockets
     for own gid,sid of sockets
       Group.findById(gid).exec (err, addressee) ->
-        if not addressee?
-          delete sockets[gid]
-        else
-          console.log "Emitting event #{event} to #{gid}"
-          sendToId gid, event, data
+        console.log "Emitting event #{event}"
+        console.log addressee
+        sendToId addressee._id, event, data
 
   return {
     sendToId:  sendToId

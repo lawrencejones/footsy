@@ -13,6 +13,7 @@ angular.module('footsy')
       $scope.$apply()
 
     initialiseSockets = ->
+
       # Initialise socket
       socket = io.connect window.location.origin
       
@@ -20,19 +21,20 @@ angular.module('footsy')
       for event in ['create', 'update']
         socket.on event, (group) ->
           console.log " >> EVENT [create/update]"
+          console.log group
           _group = $scope.groups[group._id]
-          if _group?
+          if _group? and _group != null
             angular.extend _group, group
           else
             $scope.groups[group._id] = group
           $scope.$apply()
 
       # Delete a group from the collection
-      deleteGroup = (gid) ->
+      deleteGroup = (group) ->
         console.log " >> EVENT [delete]"
-        _group = $scope.groups[gid]
-        _group.marker?.setMap? null
-        delete $scope.groups[gid]
+        _group = $scope.groups[group._id]
+        _group?.marker?.setMap? null
+        delete $scope.groups[group._id]
         $scope.$apply()
 
       # Delete single
@@ -48,7 +50,12 @@ angular.module('footsy')
 
       # Identify my connection
       socket.on 'identify', ->
-        socket.emit 'checkin', sessionStorage.gid
+        console.log sessionStorage.gid
+        if not sessionStorage.gid? and sessionStorage.gid.trim() != ''
+          socket.emit 'checkin', sessionStorage.gid
+        else $.get '/whoami', (gid) ->
+          sessionStorage.gid = gid
+          socket.emit 'checkin', gid
 
     (waitForIo = ->
       if typeof io == 'undefined' then setTimeout waitForIo, 100

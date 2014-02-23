@@ -1,4 +1,4 @@
-routeHome = ->
+routeHome = (Group) ->
 
   # GET /
   index: (req, res) ->
@@ -13,7 +13,9 @@ routeHome = ->
   # Redirects to signin if not registered
   redirect: (req, res, next) ->
     if req.session?.group_id?
-      do next
+      Group.findById(req.session.group_id).exec (err, group) ->
+        if group? then next()
+        else res.redirect '/signin'
     else res.redirect '/signin'
 
 
@@ -55,7 +57,8 @@ routeGroup = (Group, sockets) ->
   # Remove group from database
   deleteById: (req, res) ->
     Group.findByIdAndRemove req.params.id, (err, group) ->
-      sockets.broadcast 'delete', group
+      if group != null
+        sockets.broadcast 'delete', group
       res.send 200
 
   # PUT /group/:id
@@ -88,12 +91,16 @@ routeGroup = (Group, sockets) ->
 module.exports = (app, db, sockets) ->
 
   # Run route generation
-  home    = do routeHome
+  home    = routeHome    db.models.Group
   group   = routeGroup   db.models.Group, sockets
 
   # Routes for homepage
   app.get  '/',               home.redirect, home.index
   app.get  '/signin',         home.signin
+
+  # Whoami for querying group_id
+  app.get  '/whoami',  (req, res) ->
+    res.send req.session.group_id
 
   # Routes for api
   app.get    '/api/groups',      group.index

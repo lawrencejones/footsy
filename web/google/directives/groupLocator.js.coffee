@@ -33,7 +33,6 @@ angular.module('google')
       # Create links to the $scope variables and init map
       gmap = new GoogleMap $elem[0], {
         zoom: parseInt attr.zoom, 10
-        center: new google.maps.LatLng 51.50471558011393, -0.172
       }
       window.map = gmap.map
       if attr.mapHandle?
@@ -59,7 +58,6 @@ angular.module('google')
       # Keep map in sync with group latlngs, hide marker if invalid
       $scope.$watchCollection attr.groups, (groups, _old) ->
         console.log 'Detected change'
-        console.log groups
         setTimeout (-> plotGroups groups), 10
 
 

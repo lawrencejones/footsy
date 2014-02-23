@@ -25,7 +25,7 @@ angular.module('google')
           map.setCenter CurrentLocation.latlng
           CurrentLocation.getLocation (ll) ->
             map.setCenter ll
-            map.setZoom 14
+            map.setZoom 13
         ), 10
         service  = new google.maps.places.PlacesService map
 
@@ -43,6 +43,7 @@ angular.module('google')
         marker.setMap (if (opts.visible ?= true) then map else null)
         if (opts.recenter ?= true) && !map.getBounds()?.contains?(latlng)
           map.setCenter marker.getPosition()
+        marker
 
       # Adds a marker to the current map.
       #

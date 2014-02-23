@@ -53,6 +53,8 @@ app.configure 'production', 'development', 'testing', ->
 
 # Start database
 db = require './db'
+db.models.Group.remove {}, (err) -> # clean db
+  console.log err if err
 
 # Load app
 server = app.listen (PORT = process.env.PORT || 8888), ->
