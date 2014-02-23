@@ -9,16 +9,13 @@ html
     script(src='lib/google.js')
     script(src='lib/google-maps.js')
     script(src='lib/bootstrap-3.1.1.min.js')
-  body(ng-app='footsy')
+  body(ng-app='footsy', ng-controller='AppCtrl')
     //- Heading block "CGCU <3's U"
     .row
       .jumbotron.text-center
         h1 Footsy!
         p.lead Play to win.
-    .row
-      canvas.map-canvas
-    .row
-      .col-md-12
-    block append modal
-    block append content
+    block content
+    block footer
+    block modal
     script(src='app.js')

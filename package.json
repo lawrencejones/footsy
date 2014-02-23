@@ -12,6 +12,7 @@
     "mongodb": "*",
     "connect-flash": "*",
     "coffee-script": "*",
-    "mongoose": "*"
+    "mongoose": "*",
+    "najax": "latest"
   }
 }
