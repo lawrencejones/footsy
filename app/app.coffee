@@ -45,6 +45,7 @@ app.configure 'production', 'development', 'testing', ->
     res.setHeader 'Content-Type', 'text/javascript'
     res.send (globCoffee path.join root_dir, 'web')
       .map((f) -> (require 'coffee-script').compile fs.readFileSync(f, 'utf8'))
+      .reverse()
       .reduce (a,c) -> a + c
     
 
