@@ -3,6 +3,9 @@
   "description": "HackKings project!",
   "version": "0.0.1",
   "private": true,
+  "scripts": {
+    "start": "./server.coffee"
+  },
   "dependencies": {
     "express": "3.x",
     "jade": "*",

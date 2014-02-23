@@ -2,28 +2,10 @@
 io = require('socket.io').listen 9000
 sockets = {}
 
-Number.prototype.toRad = () ->
-  return this * Math.PI / 180
-
-distanceBetweenLatLng = (ll1, ll2) ->
-  R = 6371
-  lat1 = ll1.e
-  lon1 = ll1.d
-  lat2 = ll2.e
-  lon2 = ll2.d
-  console.log lat1
-  console.log lon1
-  console.log lat2
-  console.log lon2
-  dLat = (lat2-lat1).toRad()
-  dLon = (lon2-lon1).toRad()
-  lat1 = lat1.toRad()
-  lat2 = lat2.toRad()
-
-  a = Math.sin(dLat/2) * Math.sin(dLat/2) +
-          Math.sin(dLon/2) * Math.sin(dLon/2) * Math.cos(lat1) * Math.cos(lat2)
-  c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a))
-  d = R * c
+calcDis = (ll, _ll) ->
+  x = (_ll.e - ll.e) * Math.cos ((ll.d+_ll.d)/2)
+  y = _ll.d-ll.d
+  Math.sqrt (x*x + y*y) * 6341 # radius of the planet
 
 module.exports = (Group) ->
   
@@ -35,8 +17,15 @@ module.exports = (Group) ->
       console.log "Group #{groupId} identified itself"
       Group.findById(groupId).exec (err, group) ->
         if group?
-          console.log 'Group #{groupId} verified'
+          console.log "Group #{groupId} verified"
           sockets[groupId] = socket.id
+          socket.gid = groupId
+    socket.on 'disconnect', ->
+      console.log 'Socket disconnected!'
+      Group.findByIdAndRemove socket.gid, (err, group) ->
+        broadcast 'delete', group
+        delete sockets[group._id]
+
 
   # Given a group id, group event and data, will pipe
   # down to client via the open socket
@@ -47,15 +36,13 @@ module.exports = (Group) ->
   # Broadcasts event with data to all sockets
   broadcast = (event, group) ->
     for own gid,sid of sockets
-      query = Group.findById(gid)
-      query.exec (err, result) ->
-        console.log group.latlng
-        console.log result.latlng
-        d = distanceBetweenLatLng(group.latlng, result.latlng)
-        console.log d
-        if d < 1.5
-          console.log "Emitting event #{event} to #{gid}"
-          sendToId gid, event, group
+      Group.findById(gid)
+        .exec (err, result) ->
+          d = calcDis group.latlng, result.latlng
+          console.log d
+          if d < 5
+            console.log "Emitting event #{event} to #{gid}"
+            sendToId gid, event, group
 
   return {
     sendToId:  sendToId

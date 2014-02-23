@@ -18,7 +18,8 @@ groups = [
   }
 ]
 
-seed = ->
+seed = (i) ->
+  if i then groups = [groups[i]]
   for group in groups
     najax.post
       url: "#{url}/api/groups"
@@ -32,4 +33,4 @@ if process.argv[3] == 'force'
   najax.delete "#{url}/api/groups", ->
     console.log 'Successfully deleted all groups'
     do seed
-else do seed
+else seed (parseInt(process.argv[3],10))

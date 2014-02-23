@@ -12,5 +12,5 @@ angular.module('footsy').directive 'signinForm', (CurrentLocation) ->
             football: $elem.find('input[name=football]').is ':checked'
             latlng: {d: ll.d, e: ll.e}
           success: (group) ->
-            sessionStorage.gid = group.id
+            sessionStorage.gid = group._id
             window.location.href = '/'

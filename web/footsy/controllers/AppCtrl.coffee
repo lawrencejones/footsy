@@ -1,19 +1,10 @@
-angular.module('footsy').service 'Me', ->
-  this.gid = null
-
-
-angular.module('footsy').directive 'modal', ->
-  restrict: 'C'
-  link: (scope, $elem, attr) ->
-    do $elem.modal
-
 angular.module('footsy')
   .controller 'AppCtrl', ($scope) ->
 
     # Initialise
     console.log 'Init AppCtrl'
-    $scope.groups = {}
-    $scope.requests = []
+    $scope.groups    =  {}
+    $scope.requests  =  []
 
     # Fetch data from server
     $.get '/api/groups', (groups) ->
@@ -27,17 +18,21 @@ angular.module('footsy')
       # Create a new mapping
       for event in ['create', 'update']
         socket.on event, (group) ->
+          console.log " >> EVENT [create/update]"
           _group = $scope.groups[group._id]
           if _group?
             angular.extend _group, group
           else
             $scope.groups[group._id] = group
+          $scope.$apply()
 
       # Delete a group from the collection
       deleteGroup = (group) ->
+        console.log " >> EVENT [delete]"
         _group = $scope.groups[group._id]
         _group.marker?.setMap? null
-        $scope.groups[group._id] = null
+        delete $scope.groups[group._id]
+        $scope.$apply()
 
       # Delete single
       socket.on 'delete', deleteGroup
@@ -47,7 +42,12 @@ angular.module('footsy')
 
       # Listen for a join request
       socket.on 'request', (gid) ->
+        console.log " >> EVENT [request]"
         $scope.requests.push $scope.groups[gid]
+
+      # Identify my connection
+      socket.on 'identify', ->
+        socket.emit 'checkin', sessionStorage.gid
 
     (waitForIo = ->
       if typeof io == 'undefined' then setTimeout waitForIo, 100

@@ -31,7 +31,7 @@ routeGroup = (Group, sockets) ->
   deleteAll: (req, res) ->
     Group.remove {}, (err) ->
       console.log 'Deleted all records'
-      sockets.broadcast 'deleteall', {}
+      # sockets.broadcast 'deleteall', {}
       res.send 200
 
   # GET /group/:id
