@@ -23,9 +23,11 @@ app.configure 'production', 'development', 'testing', ->
   # Configure middleware
   app.use express.logger('dev')                   # logger
   app.use express.cookieParser()                  # cookie
+  app.use express.session                         # sesson
+    secret: 'mysecret'
   app.use express.bodyParser()                    # params
   app.use flash()                                 # cflash
-  
+
   # Asset serving
   app.use stylus.middleware root_dir              # stylus
   app.use coffee.middleware root_dir              # coffee

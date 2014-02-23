@@ -5,7 +5,17 @@ routeHome = ->
     res.render 'home', {  # render home
       title: 'Footsy'
     }
- 
+
+  # GET /signin
+  signin: (req, res) ->
+    res.render 'signin'
+
+  # Redirects to signin if not registered
+  redirect: (req, res, next) ->
+    if req.session?.group_id?
+      do next
+    else res.redirect '/signin'
+
 
 routeGroup = (Group, sockets) ->
 
@@ -20,7 +30,9 @@ routeGroup = (Group, sockets) ->
   # Clears all groups
   deleteAll: (req, res) ->
     Group.remove {}, (err) ->
-    sockets.broadcast 'deleteall', {}
+      console.log 'Deleted all records'
+      sockets.broadcast 'deleteall', {}
+      res.send 200
 
   # GET /group/:id
   # Returns a single group element
@@ -79,7 +91,8 @@ module.exports = (app, db) ->
   group   = routeGroup   db.models.Group, sockets
 
   # Routes for homepage
-  app.get  '/',           home.index
+  app.get  '/',               home.redirect, home.index
+  app.get  '/signin',         home.signin
 
   # Routes for api
   app.get    '/api/groups',      group.index

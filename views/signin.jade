@@ -1,0 +1,17 @@
+extend layout
+
+block content
+  form.form-signin(role='form', signin-form)
+    input.form-control(placeholder='Group Name', name='name', autofocus)
+    input.form-control(placeholder='Group Size', name='size')
+    .row
+      .col-md-12
+        a.sign-up Help?
+        label.remember.checkbox
+          input(type='checkbox', name='football')
+          span Football
+    .row
+      .col-md-12
+        button.btn.btn-lg.btn-primary.btn-block.
+          #{(flash && flash.error) || "Submit"}
+

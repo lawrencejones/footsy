@@ -18,8 +18,7 @@ groups = [
   }
 ]
 
-najax.delete "#{url}/api/groups", ->
-  console.log 'Successfully deleted all groups'
+seed = ->
   for group in groups
     najax.post
       url: "#{url}/api/groups"
@@ -28,3 +27,9 @@ najax.delete "#{url}/api/groups", ->
       success: (data) ->
         data = JSON.parse data
         console.log "Added team **#{data.name}** to db"
+
+if process.argv[3] == 'force'
+  najax.delete "#{url}/api/groups", ->
+    console.log 'Successfully deleted all groups'
+    do seed
+else do seed

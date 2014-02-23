@@ -59,6 +59,7 @@ angular.module('google')
       # Keep map in sync with group latlngs, hide marker if invalid
       $scope.$watchCollection attr.groups, (groups, _old) ->
         console.log 'Detected change'
+        console.log groups
         setTimeout (-> plotGroups groups), 10
 
 
