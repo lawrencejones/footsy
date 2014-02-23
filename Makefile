@@ -10,7 +10,7 @@ SRC := $(shell find app -name "*.coffee")
 LIB := $(SRC:$(SRC_DIR)/%.coffee=$(OUT_DIR)/%.js)
 
 # Glob web source
-WEB := $(shell find web -name "*.coffee" | tail -r)
+WEB := web/modules $(shell find web -name "*.coffee")
 
 .PHONY: all clean rebuild
 
