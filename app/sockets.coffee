@@ -10,6 +10,11 @@ module.exports = (server, Group) ->
   # Require socket.io, listen on port 9000
   io = require('socket.io').listen server
 
+  # Configure for production
+  io.configure ->
+    io.set 'transports', ['xhr-polling']
+    io.set 'polling duration', 10
+
   # On incoming connection, configure socket
   io.sockets.on 'connection', (socket) ->
     console.log 'New group connected!'
