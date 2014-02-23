@@ -56,5 +56,5 @@ db = require './db'
 (require './routes')(app, db)
 
 # Export the app
-module.exports = app
+module.exports =  app
 

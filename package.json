@@ -13,7 +13,7 @@
     "connect-flash": "*",
     "coffee-script": "*",
     "mongoose": "*",
-    "najax": "latest",
-    "socket.io": "*"
+    "socket.io": "*",
+    "najax": "latest"
   }
 }
