@@ -41,8 +41,7 @@ angular.module('google')
         marker.setMap (if (opts.visible || true) then map else null)
         if (opts.recenter || true) && !map.getBounds()?.contains?(latlng)
           map.setCenter marker.getPosition()
-        
-  
+
       # Adds a marker to the current map.
       #
       #   latlng:   LatLng instance for marker positioning
@@ -54,10 +53,11 @@ angular.module('google')
         if not latlng instanceof google.maps.LatLng
           throw new Error("Invalid latlng (#{latlng}), req LatLng type")
         marker = new google.maps.Marker {
-          map: map
-          draggable: opts.drag || true
-          animation: google.maps.Animation.DROP
-          position: latlng
+          map:        map
+          draggable:  opts.drag || true
+          animation:  google.maps.Animation.DROP
+          icon:       opts.icon
+          position:   latlng
         }
         if (opts.recenter || true) && !map.getBounds()?.contains?(latlng)
           map.setCenter marker.getPosition()
