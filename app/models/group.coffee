@@ -7,5 +7,8 @@ groupSchema = mongoose.Schema
   football:  Boolean
   latlng:
     e: Number, d: Number
+
+groupSchema.methods.add = (n) ->
+  this.size = this.size + n
   
 module.exports = mongoose.model 'Group', groupSchema

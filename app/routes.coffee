@@ -48,16 +48,16 @@ routeGroup = (Group, sockets) ->
     console.log req.body
     Group.create req.body, (err, group) ->
       return res.send 400 if err
-      sockets.broadcast 'create', req.body
+      sockets.broadcast 'create', group
       req.session.group_id = group._id
       res.send group
 
   # DELETE /group/:id
   # Remove group from database
   deleteById: (req, res) ->
-    Group.remove {_id: req.params.id}, (err) ->
-    sockets.broadcast 'delete', req.params.id
-    res.send 200
+    Group.findByIdAndRemove req.params.id, (err, group) ->
+      sockets.broadcast 'delete', group
+      res.send 200
 
   # PUT /group/:id
   # Update group with given params
@@ -77,8 +77,13 @@ routeGroup = (Group, sockets) ->
   # POST /api/group/:id/accept
   # Accept a request
   accept: (req, res) ->
-    sockets.sendToId req.params.id, 'accept', req.session.group_id
-    res.send 200
+    Group.findByIdAndRemove req.params.id, (err, joining) ->
+      sockets.broadcast 'delete', joining
+      Group.findById req.session.group_id (err, group) ->
+        group.add(joining.size)
+        sockets.broadcast 'update', group
+        sockets.sendToId req.params.id, 'accept', req.session.group_id
+        res.send 200
 
 # Takes app and appropriate parameters for route config
 module.exports = (app, db) ->
