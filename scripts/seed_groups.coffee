@@ -10,11 +10,11 @@ groups = [
   {
     name: 'Batmans closet!'
     size: 1, football: true
-    latlng: { e: 50.12, d: -0.14 }
+    latlng: {d:51.50911558011393, e:-0.18211752753904875}
   }, {
     name: 'Dead mans chest'
     size: 8, football: false
-    latlng: { e: 50.14, d: -0.168 }
+    latlng: {d:51.509436100020565, e:-0.16580969672850188}
   }
 ]
 

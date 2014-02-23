@@ -13,17 +13,18 @@ angular.module('google')
     class GoogleMap
   
       # Initialise map, service
-      constructor: (@elem, opt) ->
+      constructor: (@elem, opt = {}) ->
         printMessage "Constructing map centered at #{CurrentLocation.latlng}"
         map = @map = new google.maps.Map @elem, {
-          zoom:   opt?.zoom || 7
+          zoom:   opt.zoom || 10
+          center: CurrentLocation.latlng
         }
         # Set timeout gives the map time to initialise
-        setTimeout (->
+        if (opt.centerCrrt || true) then setTimeout (->
           map.setCenter CurrentLocation.latlng
           CurrentLocation.getLocation (ll) ->
-            map.setCenter markers?[0]?.getPosition() || ll
-            map.setZoom 12
+            map.setCenter ll
+            map.setZoom 14
         ), 10
         service  = new google.maps.places.PlacesService map
 
@@ -34,6 +35,7 @@ angular.module('google')
       #     recenter: Simply recenter screen to marker
       #
       moveMarker: (marker, latlng, opts = {}) ->
+        if not marker? then return @addMarker latlng, opts
         printMessage "Moving marker from #{marker.getPosition()} to #{latlng}"
         marker.setPosition latlng
         marker.setMap (if (opts.visible || true) then map else null)
