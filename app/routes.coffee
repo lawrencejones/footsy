@@ -45,7 +45,6 @@ routeGroup = (Group, sockets) ->
   # POST /groups/(name, size, latlng)
   # Create a new group with the parameters
   create: (req, res) ->
-    console.log req.body
     Group.create req.body, (err, group) ->
       return res.send 400 if err
       sockets.broadcast 'create', group

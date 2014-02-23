@@ -10,28 +10,22 @@ module.exports = (server, Group) ->
   # Require socket.io, listen on port 9000
   io = require('socket.io').listen server
 
-  # Configure for production
-  env = env || 'dev'
-  if env == 'production' then io.configure ->
-    io.set 'transports', ['xhr-polling']
-    io.set 'polling duration', 10
-
   # On incoming connection, configure socket
   io.sockets.on 'connection', (socket) ->
     console.log 'New group connected!'
     socket.emit 'identify'
-    socket.on 'checkin', (groupId) ->
-      console.log "Group #{groupId} identified itself"
-      Group.findById(groupId).exec (err, group) ->
+    socket.on 'checkin', (gid) ->
+      console.log "Group #{gid} identified itself"
+      Group.findById(gid).exec (err, group) ->
         if group?
-          console.log "Group #{groupId} verified"
-          sockets[groupId] = socket.id
-          socket.gid = groupId
-    socket.on 'disconnect', ->
-      console.log 'Socket disconnected!'
-      Group.findByIdAndRemove socket.gid, (err, group) ->
-        broadcast 'delete', group if group?
-        delete sockets[group?._id]
+          console.log "Group #{gid} verified"
+          sockets[gid] = socket.id
+        socket.on 'disconnect', ->
+          console.log 'Socket disconnected!'
+          console.log gid
+          Group.findByIdAndRemove gid, (err) ->
+            broadcast 'delete', group
+            delete sockets[gid]
 
 
   # Given a group id, group event and data, will pipe
@@ -41,16 +35,14 @@ module.exports = (server, Group) ->
     io.sockets.socket(sid).emit event, data
 
   # Broadcasts event with data to all sockets
-  broadcast = (event, group) ->
+  broadcast = (event, data) ->
     for own gid,sid of sockets
-      Group.findById(gid)
-        .exec (err, result) ->
-          return if not (group && result)
-          d = calcDis group.latlng, result.latlng
-          console.log d
-          if d < 5
-            console.log "Emitting event #{event} to #{gid}"
-            sendToId gid, event, group
+      Group.findById(gid).exec (err, addressee) ->
+        if not addressee?
+          delete sockets[gid]
+        else
+          console.log "Emitting event #{event} to #{gid}"
+          sendToId gid, event, data
 
   return {
     sendToId:  sendToId

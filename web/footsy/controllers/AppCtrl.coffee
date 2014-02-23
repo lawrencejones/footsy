@@ -10,6 +10,7 @@ angular.module('footsy')
     $.get '/api/groups', (groups) ->
       for group in groups
         $scope.groups[group._id] = group
+      $scope.$apply()
 
     initialiseSockets = ->
       # Initialise socket
@@ -27,11 +28,11 @@ angular.module('footsy')
           $scope.$apply()
 
       # Delete a group from the collection
-      deleteGroup = (group) ->
+      deleteGroup = (gid) ->
         console.log " >> EVENT [delete]"
-        _group = $scope.groups[group._id]
+        _group = $scope.groups[gid]
         _group.marker?.setMap? null
-        delete $scope.groups[group._id]
+        delete $scope.groups[gid]
         $scope.$apply()
 
       # Delete single
