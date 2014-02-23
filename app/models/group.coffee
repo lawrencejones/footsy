@@ -8,4 +8,4 @@ groupSchema = mongoose.Schema
   latlng:
     e: Number, d: Number
 
-module.exports = mongoose.model 'Groups', groupSchema
+module.exports = mongoose.model 'Group', groupSchema
