@@ -13,7 +13,7 @@ angular.module('footsy')
 
     initialiseSockets = ->
       # Initialise socket
-      socket = io.connect 'http://localhost'
+      socket = io.connect window.location.origin
       
       # Create a new mapping
       for event in ['create', 'update']
