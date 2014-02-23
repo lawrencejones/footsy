@@ -31,17 +31,30 @@ angular.module('google')
       $elem.css 'height', attr.height if attr.height
 
       # Create links to the $scope variables and init map
-      gmap = new GoogleMap $elem[0], {zoom: attr.zoom}
+      gmap = new GoogleMap $elem[0], {
+        zoom: parseInt attr.zoom, 10
+        center: new google.maps.LatLng 51.50471558011393, -0.172
+      }
       window.map = gmap.map
       if attr.mapHandle?
         $parse(attr.mapHandle).assign $scope, gmap
+
+      # Generate info window html
+      genContent = (group) ->
+        """ <div id="content">
+              <h4>#{group.name}</h4>
+            </div>"""
 
       # Assign all groups onto the map
       plotGroups = (groups) ->
         console.log 'Plotting'
         for id, g of groups
           ll = new google.maps.LatLng g.latlng.d, g.latlng.e
-          g.marker = gmap.moveMarker g.marker, ll, {drag: false}
+          g.marker = gmap.moveMarker g.marker, ll, {
+            drag: false
+            recenter: false
+            content: genContent g
+          }
 
       # Keep map in sync with group latlngs, hide marker if invalid
       $scope.$watchCollection attr.groups, (groups, _old) ->

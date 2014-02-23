@@ -9,6 +9,7 @@ angular.module('google')
     map = null
     service = null
     markers = []
+    infoWindows = []
   
     class GoogleMap
   
@@ -17,10 +18,10 @@ angular.module('google')
         printMessage "Constructing map centered at #{CurrentLocation.latlng}"
         map = @map = new google.maps.Map @elem, {
           zoom:   opt.zoom || 10
-          center: CurrentLocation.latlng
+          center: opt.center || CurrentLocation.latlng
         }
         # Set timeout gives the map time to initialise
-        if (opt.centerCrrt || true) then setTimeout (->
+        if not opt.center then setTimeout (->
           map.setCenter CurrentLocation.latlng
           CurrentLocation.getLocation (ll) ->
             map.setCenter ll
@@ -33,13 +34,14 @@ angular.module('google')
       #   latlng:     LatLng instance to move marker to
       #   opt:
       #     recenter: Simply recenter screen to marker
+      #     content:  Html to fill an info window
       #
       moveMarker: (marker, latlng, opts = {}) ->
         if not marker? then return @addMarker latlng, opts
         printMessage "Moving marker from #{marker.getPosition()} to #{latlng}"
         marker.setPosition latlng
-        marker.setMap (if (opts.visible || true) then map else null)
-        if (opts.recenter || true) && !map.getBounds()?.contains?(latlng)
+        marker.setMap (if (opts.visible ?= true) then map else null)
+        if (opts.recenter ?= true) && !map.getBounds()?.contains?(latlng)
           map.setCenter marker.getPosition()
 
       # Adds a marker to the current map.
@@ -59,7 +61,13 @@ angular.module('google')
           icon:       opts.icon
           position:   latlng
         }
-        if (opts.recenter || true) && !map.getBounds()?.contains?(latlng)
+        if opts.content
+          infoWindows.push info = new google.maps.InfoWindow
+            content: opts.content
+          google.maps.event.addListener marker, 'click', ->
+            console.log arguments
+            info.open map, marker
+        if (opts.recenter ?= true) && !map.getBounds()?.contains?(latlng)
           map.setCenter marker.getPosition()
         markers.push marker; marker
   

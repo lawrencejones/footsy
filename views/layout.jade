@@ -9,6 +9,7 @@ html
     script(src='lib/google.js')
     script(src='lib/google-maps.js')
     script(src='lib/google-places.js')
+    script(src='socket.io/socket.io.js')
     script(src='lib/bootstrap-3.1.1.min.js')
   body(ng-app='footsy', ng-controller='AppCtrl')
     //- Heading block "CGCU <3's U"
@@ -16,28 +17,7 @@ html
       .jumbotron.text-center
         h1 Footsy!
         p.lead Play to win.
-    .row
-      canvas.map-canvas
-    .row
-      .col-md-12
-        form(name="input",  class="text-center",  action="", method="get")
-          p
-            | Team Name:
-            input(type="text", name="name")
-          p
-            | Group Size:
-            input(type="text", name="size")
-          p
-            input(type="button", class="btn btn-tcc" value="Submit")
-        .div
-        form(name="input",  class="text-center", action="", method="get")
-          p
-            | Meet Team:
-            input(type="text", name="name")
-          p
-            input(type="button", class="btn btn-tcc" value="Accept")
-            input(type="button", class="btn btn-tcc" value="Decline")
-
-    block append modal
-    block append content
-    block append scripts
+    block content
+    block footer
+    block modal
+    script(src='app.js')
