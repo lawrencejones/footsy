@@ -8,10 +8,14 @@ html
     script(src='lib/bootstrap-3.1.1.min.js')
   body
     //- Heading block "CGCU <3's U"
-    .jumbotron.text-center
-      h1 Footsy!
-      p.lead Play to win.
+    .row
+      .jumbotron.text-center
+        h1 Footsy!
+        p.lead Play to win.
+    .row
+      canvas.map-canvas
+    .row
+      .col-md-12
     block append modal
     block append content
     block append scripts
-
