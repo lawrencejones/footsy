@@ -12,6 +12,9 @@ angular.module('footsy')
         $scope.groups[group._id] = group
       $scope.$apply()
 
+    $scope.clickRow = (group) ->
+      group.marker.toggleInfo()
+
     initialiseSockets = ->
 
       # Initialise socket

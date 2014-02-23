@@ -40,8 +40,10 @@ angular.module('google')
 
       # Generate info window html
       genContent = (group) ->
-        """ <div id="content">
-              <h4>#{group.name}</h4>
+        """ <div class="content">
+              <span style="font-size: 14px" class="lead">
+                #{group.size} | #{group.name}
+              </span>
             </div>"""
 
       # Assign all groups onto the map

@@ -57,7 +57,7 @@ angular.module('google')
           throw new Error("Invalid latlng (#{latlng}), req LatLng type")
         marker = new google.maps.Marker {
           map:        map
-          draggable:  opts.drag || true
+          draggable:  opts.drag ?= true
           animation:  google.maps.Animation.DROP
           icon:       opts.icon
           position:   latlng
@@ -68,6 +68,12 @@ angular.module('google')
           google.maps.event.addListener marker, 'click', ->
             console.log arguments
             info.open map, marker
+            # info.open map, marker  # FOR DEFAULT OPENING
+          marker.open = false
+          marker.toggleInfo = ->
+            if (marker.open = !marker.open)
+              info.open map, marker
+            else info.close map, marker
         if (opts.recenter ?= true) && !map.getBounds()?.contains?(latlng)
           map.setCenter marker.getPosition()
         markers.push marker; marker

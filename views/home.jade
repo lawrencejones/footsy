@@ -7,3 +7,16 @@ block scripts
 block content
   .row
     .group-locator(map-handle='gmap', groups='groups' zoom='14')
+  .row
+    .col-md-6.col-md-offset-3
+      table.table.table-bordered.group-table
+        tbody
+          tr
+            th.index #
+            th.name Name
+            th.size Size
+          tr(ng-repeat="group in groups",
+             ng-click="clickRow(group)")
+            td.index {{ $index + 1 }}
+            td.name {{ group.name }}
+            td.size {{ group.size }}

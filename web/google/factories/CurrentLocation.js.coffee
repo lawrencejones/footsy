@@ -34,7 +34,7 @@ angular.module('google')
         navigator.geolocation.getCurrentPosition (pos) ->
           if pos?
             # Add salt to the location for testing
-            [x,y] = [Math.random(), Math.random()].map (n) -> 0.01*(n - 0.5)
+            [x,y] = [Math.random(), Math.random()].map (n) -> 0.015*(n - 0.5)
             # [x,y] = [0,0]
             coords = [pos.coords.latitude + x, pos.coords.longitude + y]
             me.latlng = new google.maps.LatLng coords...
