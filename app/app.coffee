@@ -34,22 +34,21 @@ app.configure 'production', 'development', 'testing', ->
   app.use express.static "#{root_dir}/public"     # static
   
   # Concatenates all coffeescript for webapp
-  if not app.settings.env == 'production'
-    app.get '/app.js', (req, res) ->
-      globCoffee = (dpath) ->
-        rexedFiles = []
-        for fpath in fs.readdirSync dpath
-          fpath = path.join dpath, fpath
-          if fs.statSync(fpath).isDirectory()
-            rexedFiles.push globCoffee fpath
-          else if /^(.+)\.coffee$/.test fpath
-            rexedFiles.push fpath
-        [].concat.apply [], rexedFiles
-      res.setHeader 'Content-Type', 'text/javascript'
-      res.send (globCoffee path.join root_dir, 'web')
-        .map((f) -> (require 'coffee-script').compile fs.readFileSync(f, 'utf8'))
-        .reverse()
-        .reduce (a,c) -> a + c
+  app.get '/app.js', (req, res) ->
+    globCoffee = (dpath) ->
+      rexedFiles = []
+      for fpath in fs.readdirSync dpath
+        fpath = path.join dpath, fpath
+        if fs.statSync(fpath).isDirectory()
+          rexedFiles.push globCoffee fpath
+        else if /^(.+)\.coffee$/.test fpath
+          rexedFiles.push fpath
+      [].concat.apply [], rexedFiles
+    res.setHeader 'Content-Type', 'text/javascript'
+    res.send (globCoffee path.join root_dir, 'web')
+      .map((f) -> (require 'coffee-script').compile fs.readFileSync(f, 'utf8'))
+      .reverse()
+      .reduce (a,c) -> a + c
     
 
 # Start database

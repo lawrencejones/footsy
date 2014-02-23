@@ -11,7 +11,8 @@ module.exports = (server, Group) ->
   io = require('socket.io').listen server
 
   # Configure for production
-  io.configure ->
+  env = env || 'dev'
+  if env == 'production' then io.configure ->
     io.set 'transports', ['xhr-polling']
     io.set 'polling duration', 10
 
