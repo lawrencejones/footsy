@@ -7,7 +7,7 @@ routeHome = ->
     }
  
 
-routeGroup = (Group) ->
+routeGroup = (Group, sockets) ->
 
   # GET /groups
   # Returns an index of all the groups
@@ -22,7 +22,6 @@ routeGroup = (Group) ->
     Group.remove {}, (err) ->
       res.send if not err then 200 else 500
 
-
   # GET /group/:id
   # Returns a single group element
   findById: (req, res) ->
@@ -36,6 +35,8 @@ routeGroup = (Group) ->
   create: (req, res) ->
     Group.create req.body, (err, group) ->
       return res.send 400 if err
+      sockets.broadcast 'create', req.body
+      req.session.group_id = group._id
       res.send group
 
   # DELETE /group/:id
@@ -50,14 +51,30 @@ routeGroup = (Group) ->
     Group.findOneAndUpdate {
       _id: req.params.id
     }, { $set: req.body }, (err, group) ->
-      res.send if err then 500 else group
+      sockets.broadcast 'update', group
+      res.send group
   
+  # POST /api/group/:id/request
+  # Log a request
+  request: (req, res) ->
+    sockets.sendToId req.params.id, 'request', req.session.group_id
+    res.send 200
+
+  # POST /api/group/:id/accept
+  # Accept a request
+  accept: (req, res) ->
+    sockets.sendToId req.params.id, 'accept', req.session.group_id
+    res.send 200
 
 # Takes app and appropriate parameters for route config
 module.exports = (app, db) ->
 
-  home  = routeHome()
-  group = routeGroup(db.models.Group)
+  # Initialise sockets
+  sockets = (require './sockets')(db.models.Group)
+
+  # Run route generation
+  home    = do routeHome
+  group   = routeGroup   db.models.Group, sockets
 
   # Routes for homepage
   app.get  '/',           home.index
@@ -69,3 +86,8 @@ module.exports = (app, db) ->
   app.get    '/api/group/:id',   group.findById
   app.delete '/api/group/:id',   group.deleteById
   app.put    '/api/group/:id',   group.updateById
+
+  # Routes for requests
+  app.post   '/api/group/:id/request',     group.request
+  app.post   '/api/group/:id/accept',      group.accept
+
