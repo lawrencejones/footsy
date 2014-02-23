@@ -3,10 +3,11 @@ COFFEE_FLAGS := --compile --bare
 
 # Setup file locations
 SRC_DIR  := app
+OUT_DIR  := target
 
 # Glob all the coffee source
 SRC := $(shell find app -name "*.coffee") server.coffee
-LIB := $(SRC:.coffee=.js)
+LIB := $(SRC:$(SRC_DIR)/%.coffee=$(OUT_DIR)/%.js)
 
 .PHONY: all clean rebuild
 
@@ -23,7 +24,7 @@ clean:
 rebuild: clean all
 
 # Rule for all other coffee files
-%.js: %.coffee
+$(OUT_DIR)/%.js: $(SRC_DIR)/%.coffee
 	@-echo "  Compiling $@"
 	@$(COFFEE) $(COFFEE_FLAGS) -o $(shell dirname $@) $^
 

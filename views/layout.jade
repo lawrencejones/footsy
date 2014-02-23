@@ -4,19 +4,12 @@ html
     title #{title}
     link(rel='stylesheet', type="text/css", href='/lib/bootstrap-3.1.1.min.css')
     link(rel='stylesheet', type="text/css", href='/stylesheets/style.css')
+    script(src='socket.io/socket.io.js')
     script(src='lib/jquery-2.1.0.js')
     script(src='lib/angular.js')
     script(src='lib/google.js')
     script(src='lib/google-maps.js')
     script(src='lib/google-places.js')
-    script(type='text/javascript').
-      var loc = window.location,
-          sio = loc.protocol+'//'+loc.hostname+':9000/socket.io/socket.io.js';
-      var head   = document.getElementsByTagName('head')[0];
-      var script = document.createElement('script');
-      script.type= 'text/javascript';
-      script.src= sio;
-      head.appendChild(script);
     script(src='lib/bootstrap-3.1.1.min.js')
   body(ng-app='footsy', ng-controller='AppCtrl')
     //- Heading block "CGCU <3's U"

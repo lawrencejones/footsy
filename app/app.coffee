@@ -54,9 +54,14 @@ app.configure 'production', 'development', 'testing', ->
 # Start database
 db = require './db'
 
+# Load app
+server = app.listen (PORT = process.env.PORT || 8888), ->
+  console.log "Listening at localhost:#{PORT}"
+
+# Initialise sockets
+sockets = (require './sockets')(server, db.models.Group)
+
 # Load routes
 (require './routes')(app, db)
 
-# Export the app
-module.exports =  app
 

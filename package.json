@@ -4,9 +4,8 @@
   "version": "0.0.1",
   "private": true,
   "scripts": {
-    "start": "node server.js",
-    "prepublish": "make all",
-    "postpublish": "make clean"
+    "start": "node target/app.js",
+    "prepublish": "make all"
   },
   "dependencies": {
     "express": "3.x",

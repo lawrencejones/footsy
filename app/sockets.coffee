@@ -1,5 +1,3 @@
-# Require socket.io, listen on port 9000
-io = require('socket.io').listen 9000
 sockets = {}
 
 calcDis = (ll, _ll) ->
@@ -7,8 +5,11 @@ calcDis = (ll, _ll) ->
   y = _ll.d-ll.d
   Math.sqrt (x*x + y*y) * 6341 # radius of the planet
 
-module.exports = (Group) ->
+module.exports = (server, Group) ->
   
+  # Require socket.io, listen on port 9000
+  io = require('socket.io').listen server
+
   # On incoming connection, configure socket
   io.sockets.on 'connection', (socket) ->
     console.log 'New group connected!'

@@ -86,10 +86,7 @@ routeGroup = (Group, sockets) ->
         res.send 200
 
 # Takes app and appropriate parameters for route config
-module.exports = (app, db) ->
-
-  # Initialise sockets
-  sockets = (require './sockets')(db.models.Group)
+module.exports = (app, db, sockets) ->
 
   # Run route generation
   home    = do routeHome
