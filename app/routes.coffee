@@ -20,7 +20,7 @@ routeGroup = (Group, sockets) ->
   # Clears all groups
   deleteAll: (req, res) ->
     Group.remove {}, (err) ->
-      res.send if not err then 200 else 500
+    sockets.broadcast 'deleteall', {}
 
   # GET /group/:id
   # Returns a single group element
@@ -44,8 +44,9 @@ routeGroup = (Group, sockets) ->
   # Remove group from database
   deleteById: (req, res) ->
     Group.remove {_id: req.params.id}, (err) ->
-      res.send if err then 500 else 200
-    
+    sockets.broadcast 'delete', req.params.id
+    res.send 200
+
   # PUT /group/:id
   # Update group with given params
   updateById: (req, res) ->
