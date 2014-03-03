@@ -9,6 +9,7 @@ stylus   = require './midware/stylus'
 # Init app
 app = express()
 root_dir = path.join __dirname, '..'
+if not root_dir? then root_dir = path.join process.cwd(), '..'
 
 # Configure app
 config = require './config'
