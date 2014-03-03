@@ -14,7 +14,7 @@ db.once 'open', ->
 # Glob all models
 fetchModels = ->
   models = {}
-  coffeeRex = /(.*)\.coffee/
+  coffeeRex = /(.*)\.(coffee|js)/
   modelsDir = path.join __dirname, 'models'
   for f in fs.readdirSync modelsDir
     if coffeeRex.test f

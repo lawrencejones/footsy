@@ -57,7 +57,7 @@ db.models.Group.remove {}, (err) -> # clean db
   console.log err if err
 
 # Load app
-server = app.listen (PORT = process.env.PORT || 8888), ->
+server = app.listen (PORT = process.env.PORT || 80), ->
   console.log "Listening at localhost:#{PORT}"
 
 # Initialise sockets
